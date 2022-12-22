@@ -1,0 +1,19 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092 #nếu có nhiều còn kafka server thì chúng ta chỉ cần ",localhost:8081,..."
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      #Chuyển đối đối tượng java của mình về luồng, byte để gửi lên kafka
+      acks: -1
+      #0: Không chờ kafka phản hồi, producer sẽ không cần quan tâm kafka có lưu thành công hay không, nó xác nhận luôn là đã gửi thành công
+        #Sẽ xảy ra 1 trường hợp là mất event nếu chúng ta gửi nhiều cùng 1 lúc, tốc độ cao do kafka server không kịp lưu.
+      #1: Lưu thành công vào leader nhưng sẽ không đợi để lưu vào trong Follower. Vẫn sẽ bị mất data do leader sau khi lưu xong evetn thì sập
+        #do đó những Follower chưa kịp copy.
+      #-1: Event sẽ lưu thành công vào leader và tất cả các follower phải copy lại thành công thì nó mới xác minh là đã gửi event thành công
+      retries: 1
+      #số lượng gửi lại nếu acks bị fail, có thể gây ra duplicate event
+      properties:
+        -enable.idempotence: true
+          # kiểm tra có trùng event trong trường hợp retry, chỉ hoạt động nếu ta cấu hình thêm bên dưới.
+        -max.in.flight.requests.per.connection: 5
+          #số lượng request tối đa trên 1 connection phải nhỉ hơn hoặc bằng 5

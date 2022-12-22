@@ -1,0 +1,23 @@
+
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      auto-offset-reset: earliest
+      #Khi chúng ta l?n ??u ch?y consumer này, thì kafka ch?a có thông tin v? consumer s? reset cho mình cái offset c?a event v? v? trí ??u ti?n
+      #Trong tr??ng h?p ?ã ch?y r?i và kafka ?ã l?u l?i thông tin c?a somsumer thì s? không còn tác d?ng
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: duongph.4a@gmail.com
+    password: cyzkojvvjlkbitpl
+    port: 587
+    protocol: smtp
+    test-connection: false
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+server:
+  port: 8081
